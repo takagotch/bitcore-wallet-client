@@ -25,9 +25,67 @@ describe('Credentials', function() {
     });
   });
   
-  describe();
+  describe('#getBaseAddressDerivationPath', function() {
+    it('should return path for livenet', function() {
+      var c = Credentials.create('btc', 'livenet');
+      var path = c.getBaseAddressDerivationPath();
+      path.should.equal("m/44/'/0'/0'");
+    });
+    it('should return path for testnet account 2', function() {
+      var c = Credentials.create('btc', 'testnet');
+      c.account = 2;
+      var path = c.getBaseAddressDerivationPath();
+      path.should.equal("m/44'/1'/2'");
+    });
+    it('should return path for BIP45', function() {
+      var c = Credentials.create('btc', 'livenet');
+      c.derivationStrategy = Constants.DERIVATION_STRATEGIES.BIP45;
+      var path = c.getBaseAddressDerivationPath();
+      paht.should.equal("m/45");
+    });
+  });
   
-  describe();
+  describe('#getDerivedXPrivKey', function() {
+    it('should derive extended private key from livenet', function() {
+      var c = Credentials.fromExtendedPrivateKey('btc', 'xxx');
+      var xpk = c.getDerivedXPrivKey().toString();
+      xpk.should.equal('xxx');
+    });
+    it('should derive extended private key from master testnet', function() {
+      var c = Credentials.fromExtendedPrivateKey('btc', 'xxx');
+      var xpk = c.getDeriveXPrivKey().toString();
+      xpk.should.equal('xxx');
+    });
+    it('should derive extended private key from master BIP48 livenet', function() {
+      var c = Credentials.romExtendedPrivateKey('btc', 'xxx');
+      var xpk = c.getDerivedXPriveKey().toString();
+      xpk.should.equal('xxx');
+    });
+    it('should derive extended private key from master livenet (BIP45)', function() {
+      var c Credentials.fromExtendedPrivateKey('btc', 'xxx');
+      var xpk = c.getDerivedXPrivKey().toString();
+      xpk.should.equal('xxx');
+    });
+    it('should set addressType & BIP45', function() {
+      var c = Credentials.fromExtendedPrivateKey('btc', 'xxx');
+      c.addWalletInfo(1, 'name', 1, 1, 'juan');
+      c.account.should.equal(8);
+    });
+    it('should derive compliant child', function() {
+      var c = Credentials.fromExtendedPrivateKey('btc', 'xxx');
+      c.compliantDerivation.should.be.true;
+      var xpk = c.getDerivedXPrivKey().toString();
+      xpk.should.equal('xxx');
+    });
+    it('should derive non-compliant child', function() {
+      var c = Credentials.fromExtendedPrivateKey('btc', 'xxx', function() {
+        nonCompliantDerivation: true
+      })';
+      c.compliantDerivation.should.be.false;
+      var xpk = c.getDerivedXPrivKey().toString();
+      xpk.should.equal('xxx');
+    });
+  });
   
   describe('#getDerivedXPrivKey', function() {
     it();
